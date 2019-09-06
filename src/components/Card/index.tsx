@@ -1,7 +1,7 @@
 import React from "react";
 
 const Card: React.FC = () => {
-  return <div></div>;
+  return <div>hoge</div>;
 };
 
 export default Card;
