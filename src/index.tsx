@@ -1,5 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React from "react";
 import ReactDOM from "react-dom";
+import Card from "./components/Card";
 
-ReactDOM.render(<h1>HogeHogeHo App</h1>, document.getElementById("root"));
+ReactDOM.render(<Card title="hoge" url="https://www.google.co.jp/" date="2019/09/06" />, document.getElementById("root"));
