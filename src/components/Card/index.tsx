@@ -7,6 +7,7 @@ interface CardProps {
   registerdDate: string;
 }
 
+// TODO: styled-components のコンポーネント名をなんとかしたい
 const Card: React.FC<CardProps> = ({ title, url, registerdDate }) => {
   return (
     <StyledDiv>
