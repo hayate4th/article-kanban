@@ -1,5 +1,5 @@
 import React from "react";
-import styled from 'styled-components';
+import styled from "styled-components";
 
 interface CardProps {
   title: string;
@@ -15,7 +15,8 @@ const Card: React.FC<CardProps> = ({ title, url, registerdDate }) => {
         <StyledH1>{title}</StyledH1>
         <StyledSpan>登録日: {registerdDate}</StyledSpan>
       </StyledA>
-    </StyledDiv>);
+    </StyledDiv>
+  );
 };
 
 // TODO: 複数行以上になると text-overflow: ellipsis がかかるようにする
@@ -60,6 +61,5 @@ const StyledSpan = styled.span`
   position: absolute;
   right: 10px;
 `;
-
 
 export default Card;
