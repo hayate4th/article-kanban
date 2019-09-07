@@ -51,12 +51,13 @@ const StyledDiv = styled.div`
   font-size: 25px;
   height: 204px;
   margin-bottom: 10px;
+  margin-right: 0;
   width: 204px;
 `;
 
 const StyledA = styled.a`
   background-color: white;
-  border: 2px solid palevioletred;
+  border: 2px solid orange;
   border-radius: 3px;
   color: black;
   display: block;
@@ -67,7 +68,7 @@ const StyledA = styled.a`
   width: 180px;
 
   &:hover {
-    background-color: palevioletred;
+    background-color: orange;
     color: white;
   }
 `;

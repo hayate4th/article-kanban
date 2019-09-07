@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Card, { CardType } from "../Card";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
+import styled from "styled-components";
 import { reorder } from "../../utils";
 
 const CardList: React.FC<{}> = () => {
@@ -46,19 +47,28 @@ const CardList: React.FC<{}> = () => {
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="list">
-        {(provided): React.ReactElement => (
-          <div ref={provided.innerRef} {...provided.droppableProps}>
-            {state.cards.map((card: CardType, index: number) => (
-              <Card card={card} index={index} key={card.id} />
-            ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>
+    <StyledDiv>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="list">
+          {(provided): React.ReactElement => (
+            <div ref={provided.innerRef} {...provided.droppableProps}>
+              {state.cards.map((card: CardType, index: number) => (
+                <Card card={card} index={index} key={card.id} />
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+    </StyledDiv>
   );
 };
+
+const StyledDiv = styled.div`
+  border: 2px solid blue;
+  border-radius: 3px;
+  padding: 20px 20px 20px;
+  width: 204px;
+`;
 
 export default CardList;
