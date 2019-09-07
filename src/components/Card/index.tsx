@@ -1,21 +1,38 @@
 import React from "react";
 import styled from "styled-components";
+import { Draggable } from "react-beautiful-dnd";
 
-interface CardProps {
+// TODO: type じゃなくてもいいかも？
+export type CardType = {
+  id: string;
   title: string;
   url: string;
-  registerdDate: string;
+  registeredDate: string;
+};
+
+interface CardProps {
+  card: CardType;
+  index: number;
 }
 
 // TODO: styled-components のコンポーネント名をなんとかしたい
-const Card: React.FC<CardProps> = ({ title, url, registerdDate }) => {
+// TODO: できれば Card と Draggable を分離したい
+const Card: React.FC<CardProps> = ({ card, index }) => {
   return (
-    <StyledDiv>
-      <StyledA href={url} target="_blank">
-        <StyledH1>{title}</StyledH1>
-        <StyledSpan>登録日: {registerdDate}</StyledSpan>
-      </StyledA>
-    </StyledDiv>
+    <Draggable draggableId={card.id} index={index}>
+      {(provided): React.ReactElement => (
+        <StyledDiv
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+        >
+          <StyledA href={card.url} target="_blank">
+            <StyledH1>{card.title}</StyledH1>
+            <StyledSpan>登録日: {card.registeredDate}</StyledSpan>
+          </StyledA>
+        </StyledDiv>
+      )}
+    </Draggable>
   );
 };
 
@@ -33,10 +50,12 @@ const StyledH1 = styled.h1`
 const StyledDiv = styled.div`
   font-size: 25px;
   height: 204px;
+  margin-bottom: 10px;
   width: 204px;
 `;
 
 const StyledA = styled.a`
+  background-color: white;
   border: 2px solid palevioletred;
   border-radius: 3px;
   color: black;
