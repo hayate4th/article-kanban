@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Draggable } from "react-beautiful-dnd";
 
+// TODO: type じゃなくてもいいかも？
 export type CardType = {
   id: string;
   title: string;
@@ -15,6 +16,7 @@ interface CardProps {
 }
 
 // TODO: styled-components のコンポーネント名をなんとかしたい
+// TODO: できれば Card と Draggable を分離したい
 const Card: React.FC<CardProps> = ({ card, index }) => {
   return (
     <Draggable draggableId={card.id} index={index}>
