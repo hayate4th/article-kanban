@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Card, { CardType } from "../Card";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { reorder } from "../../utils";
 
 const CardList: React.FC<{}> = () => {
@@ -27,7 +27,7 @@ const CardList: React.FC<{}> = () => {
     ] as CardType[]
   });
 
-  const onDragEnd = (result: any): void => {
+  const onDragEnd = (result: DropResult): void => {
     if (!result.destination) {
       return;
     }
