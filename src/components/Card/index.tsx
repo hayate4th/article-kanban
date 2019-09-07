@@ -13,11 +13,12 @@ export type CardType = {
 interface CardProps {
   card: CardType;
   index: number;
+  isEditMode: boolean;
 }
 
 // TODO: styled-components のコンポーネント名をなんとかしたい
 // TODO: できれば Card と Draggable を分離したい
-const Card: React.FC<CardProps> = ({ card, index }) => {
+const Card: React.FC<CardProps> = ({ card, index, isEditMode }) => {
   return (
     <Draggable draggableId={card.id} index={index}>
       {(provided): React.ReactElement => (
@@ -26,6 +27,15 @@ const Card: React.FC<CardProps> = ({ card, index }) => {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
+          {isEditMode && (
+            <DeleteButton
+              onClick={(): void => {
+                console.log("Deleted!");
+              }}
+            >
+              Delete
+            </DeleteButton>
+          )}
           <StyledA href={card.url} target="_blank">
             <StyledH1>{card.title}</StyledH1>
             <StyledSpan>登録日: {card.registeredDate}</StyledSpan>
@@ -52,6 +62,7 @@ const StyledDiv = styled.div`
   height: 204px;
   margin-bottom: 10px;
   margin-right: 0;
+  position: relative;
   width: 204px;
 `;
 
@@ -66,6 +77,7 @@ const StyledA = styled.a`
   position: relative;
   text-decoration: none;
   width: 180px;
+  z-index: 0;
 
   &:hover {
     background-color: orange;
@@ -80,6 +92,13 @@ const StyledSpan = styled.span`
   font-size: 50%;
   position: absolute;
   right: 10px;
+`;
+
+const DeleteButton = styled.button`
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 999;
 `;
 
 export default Card;

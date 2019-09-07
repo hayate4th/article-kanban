@@ -4,7 +4,11 @@ import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { reorder } from "../../utils";
 
-const CardList: React.FC<{}> = () => {
+interface CardListProps {
+  isEditMode: boolean;
+}
+
+const CardList: React.FC<CardListProps> = ({ isEditMode }) => {
   const [state, setState] = useState({
     cards: [
       {
@@ -53,7 +57,12 @@ const CardList: React.FC<{}> = () => {
           {(provided): React.ReactElement => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
               {state.cards.map((card: CardType, index: number) => (
-                <Card card={card} index={index} key={card.id} />
+                <Card
+                  card={card}
+                  index={index}
+                  key={card.id}
+                  isEditMode={isEditMode}
+                />
               ))}
               {provided.placeholder}
             </div>
