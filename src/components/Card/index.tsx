@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Draggable } from "react-beautiful-dnd";
+import delete_button from "./delete_button.png";
 
 // TODO: type じゃなくてもいいかも？
 export type CardType = {
@@ -32,9 +33,7 @@ const Card: React.FC<CardProps> = ({ card, index, isEditMode }) => {
               onClick={(): void => {
                 console.log("Deleted!");
               }}
-            >
-              Delete
-            </DeleteButton>
+            />
           )}
           <StyledA href={card.url} target="_blank">
             <StyledH1>{card.title}</StyledH1>
@@ -95,9 +94,15 @@ const StyledSpan = styled.span`
 `;
 
 const DeleteButton = styled.button`
+  background-image: url(${delete_button});
+  border: none;
+  border-radius: 10px;
+  height: 20px;
+  padding: 0;
   position: absolute;
   right: 10px;
   top: 10px;
+  width: 20px;
   z-index: 999;
 `;
 
