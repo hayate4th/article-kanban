@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Draggable } from "react-beautiful-dnd";
-import delete_button from "./delete_button.png";
+import deleteButton from "./delete_button.png";
 
 // TODO: type じゃなくてもいいかも？
 export type CardType = {
@@ -94,7 +94,7 @@ const StyledSpan = styled.span`
 `;
 
 const DeleteButton = styled.button`
-  background-image: url(${delete_button});
+  background-image: url(${deleteButton});
   border: none;
   border-radius: 10px;
   height: 20px;
