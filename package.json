@@ -25,10 +25,11 @@
   },
   "homepage": "https://github.com/hayate4th/article-kanban#readme",
   "dependencies": {
-    "@types/react-beautiful-dnd": "^11.0.3",
     "react": "^16.9.0",
     "react-beautiful-dnd": "^11.0.5",
     "react-dom": "^16.9.0",
+    "react-redux": "^7.1.1",
+    "redux": "^4.0.4",
     "styled-components": "^4.3.2"
   },
   "devDependencies": {
@@ -39,7 +40,9 @@
     "@storybook/preset-typescript": "^1.1.0",
     "@storybook/react": "^5.1.11",
     "@types/react": "^16.9.2",
+    "@types/react-beautiful-dnd": "^11.0.3",
     "@types/react-dom": "^16.9.0",
+    "@types/react-redux": "^7.1.2",
     "@types/storybook__addon-actions": "^3.4.3",
     "@types/storybook__react": "^4.0.2",
     "@types/styled-components": "^4.1.18",
@@ -51,10 +54,12 @@
     "eslint-config-prettier": "^6.2.0",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "^7.14.3",
+    "file-loader": "^4.2.0",
     "prettier": "^1.18.2",
     "react-docgen-typescript-loader": "^3.2.0",
     "ts-loader": "^6.0.4",
     "typescript": "^3.6.2",
+    "url-loader": "^2.1.0",
     "webpack": "^4.39.3",
     "webpack-cli": "^3.3.7",
     "webpack-dev-server": "^3.8.0"
