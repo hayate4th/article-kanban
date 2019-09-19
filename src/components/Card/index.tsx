@@ -13,13 +13,14 @@ export type CardType = {
 
 interface CardProps {
   card: CardType;
+  deleteCard: () => void;
   index: number;
   isEditMode: boolean;
 }
 
 // TODO: styled-components のコンポーネント名をなんとかしたい
 // TODO: できれば Card と Draggable を分離したい
-const Card: React.FC<CardProps> = ({ card, index, isEditMode }) => {
+const Card: React.FC<CardProps> = ({ card, deleteCard, index, isEditMode }) => {
   return (
     <Draggable draggableId={card.id} index={index}>
       {(provided): React.ReactElement => (
@@ -28,13 +29,7 @@ const Card: React.FC<CardProps> = ({ card, index, isEditMode }) => {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          {isEditMode && (
-            <DeleteButton
-              onClick={(): void => {
-                console.log("Deleted!");
-              }}
-            />
-          )}
+          {isEditMode && <DeleteButton onClick={deleteCard} />}
           <StyledA href={card.url} target="_blank">
             <StyledH1>{card.title}</StyledH1>
             <StyledSpan>登録日: {card.registeredDate}</StyledSpan>
