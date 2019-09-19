@@ -5,13 +5,13 @@ import {
   EnhancedStore
 } from "redux-starter-kit";
 import cardListModule from "./modules/cardListModule";
-import { CardType } from "./components/Card";
+import { CardListType } from "./components/CardList";
 
 const rootReducer = combineReducers({
-  cardList: cardListModule.reducer
+  kanban: cardListModule.reducer
 });
 
-export const setupStore = (): EnhancedStore<{ cardList: CardType[] }> => {
+export const setupStore = (): EnhancedStore<{ kanban: CardListType[] }> => {
   const middlewares = [...getDefaultMiddleware()];
 
   const store = configureStore({
