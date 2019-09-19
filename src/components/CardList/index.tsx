@@ -1,32 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import Card, { CardType } from "../Card";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { reorder } from "../../utils";
+import { useDispatch, useSelector } from "react-redux";
+import cardListModule from "../../modules/cardListModule";
 
-const CardList: React.FC<{}> = () => {
-  const [state, setState] = useState({
-    cards: [
-      {
-        id: "content-1",
-        title: "Introducing Hooks",
-        url: "https://reactjs.org/docs/hooks-intro.html",
-        registeredDate: "2019/09/06"
-      },
-      {
-        id: "content-2",
-        title: "Hooks at a Glance",
-        url: "https://reactjs.org/docs/hooks-overview.html",
-        registeredDate: "2019/09/07"
-      },
-      {
-        id: "content-3",
-        title: "Using the State Hook",
-        url: "https://reactjs.org/docs/hooks-state.html",
-        registeredDate: "2019/09/07"
-      }
-    ] as CardType[]
-  });
+interface CardListProps {
+  isEditMode: boolean;
+}
+
+const CardList: React.FC<CardListProps> = ({ isEditMode }) => {
+  const dispatch = useDispatch();
+  const state = useSelector(state => state) as {
+    cardList: CardType[];
+  };
 
   const onDragEnd = (result: DropResult): void => {
     if (!result.destination) {
@@ -37,13 +25,12 @@ const CardList: React.FC<{}> = () => {
       return;
     }
 
-    const cards: CardType[] = reorder(
-      state.cards,
+    const cardList: CardType[] = reorder(
+      state.cardList,
       result.source.index,
       result.destination.index
     );
-
-    setState({ cards });
+    dispatch(cardListModule.actions.reorderCard({ cardList }));
   };
 
   return (
@@ -52,8 +39,17 @@ const CardList: React.FC<{}> = () => {
         <Droppable droppableId="list">
           {(provided): React.ReactElement => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
-              {state.cards.map((card: CardType, index: number) => (
-                <Card card={card} index={index} key={card.id} />
+              {state.cardList.map((card: CardType, index: number) => (
+                <Card
+                  card={card}
+                  index={index}
+                  key={card.id}
+                  isEditMode={isEditMode}
+                  // TODO: dispatch() の返す型を直書きしたくない
+                  deleteCard={(): { type: string; payload: string } =>
+                    dispatch(cardListModule.actions.deleteCard(card.id))
+                  }
+                />
               ))}
               {provided.placeholder}
             </div>

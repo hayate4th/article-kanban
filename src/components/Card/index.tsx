@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Draggable } from "react-beautiful-dnd";
+import deleteButton from "./delete_button.png";
 
 // TODO: type じゃなくてもいいかも？
 export type CardType = {
@@ -12,12 +13,14 @@ export type CardType = {
 
 interface CardProps {
   card: CardType;
+  deleteCard: () => void;
   index: number;
+  isEditMode: boolean;
 }
 
 // TODO: styled-components のコンポーネント名をなんとかしたい
 // TODO: できれば Card と Draggable を分離したい
-const Card: React.FC<CardProps> = ({ card, index }) => {
+const Card: React.FC<CardProps> = ({ card, deleteCard, index, isEditMode }) => {
   return (
     <Draggable draggableId={card.id} index={index}>
       {(provided): React.ReactElement => (
@@ -26,6 +29,7 @@ const Card: React.FC<CardProps> = ({ card, index }) => {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
+          {isEditMode && <DeleteButton onClick={deleteCard} />}
           <StyledA href={card.url} target="_blank">
             <StyledH1>{card.title}</StyledH1>
             <StyledSpan>登録日: {card.registeredDate}</StyledSpan>
@@ -52,6 +56,7 @@ const StyledDiv = styled.div`
   height: 204px;
   margin-bottom: 10px;
   margin-right: 0;
+  position: relative;
   width: 204px;
 `;
 
@@ -66,6 +71,7 @@ const StyledA = styled.a`
   position: relative;
   text-decoration: none;
   width: 180px;
+  z-index: 0;
 
   &:hover {
     background-color: orange;
@@ -80,6 +86,19 @@ const StyledSpan = styled.span`
   font-size: 50%;
   position: absolute;
   right: 10px;
+`;
+
+const DeleteButton = styled.button`
+  background-image: url(${deleteButton});
+  border: none;
+  border-radius: 10px;
+  height: 20px;
+  padding: 0;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 20px;
+  z-index: 999;
 `;
 
 export default Card;
