@@ -1,5 +1,5 @@
 import React from "react";
-import Card, { CardType } from "../Card";
+import Card, { CardType, DeleteButton } from "../Card";
 import {
   Draggable,
   DragDropContext,
@@ -19,11 +19,17 @@ export interface CardListType {
 
 interface CardListProps {
   cardList: CardListType;
+  deleteCardList: () => void;
   index: number;
   isEditMode: boolean;
 }
 
-const CardList: React.FC<CardListProps> = ({ cardList, index, isEditMode }) => {
+const CardList: React.FC<CardListProps> = ({
+  cardList,
+  deleteCardList,
+  index,
+  isEditMode
+}) => {
   const dispatch = useDispatch();
 
   const onDragEnd = (result: DropResult): void => {
@@ -88,6 +94,7 @@ const CardList: React.FC<CardListProps> = ({ cardList, index, isEditMode }) => {
               )}
             </Droppable>
           </DragDropContext>
+          {isEditMode && <DeleteButton onClick={deleteCardList} />}
         </StyledDiv>
       )}
     </Draggable>
@@ -100,6 +107,7 @@ const StyledDiv = styled.div`
   border-radius: 3px;
   margin-right: 20px;
   padding: 20px 20px 20px;
+  position: relative;
   width: 204px;
 `;
 

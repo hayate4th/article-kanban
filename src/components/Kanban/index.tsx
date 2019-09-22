@@ -40,6 +40,16 @@ const Kanban: React.FC<KanbanProps> = ({ isEditMode }) => {
             {state.kanban.map((cardList: CardListType, index: number) => (
               <CardList
                 cardList={cardList}
+                deleteCardList={(): {
+                  type: string;
+                  payload: { deleteId: string };
+                } =>
+                  dispatch(
+                    kanbanModule.actions.deleteCardList({
+                      deleteId: cardList.id
+                    })
+                  )
+                }
                 index={index}
                 key={cardList.id}
                 isEditMode={isEditMode}
