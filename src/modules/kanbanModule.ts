@@ -95,6 +95,11 @@ const kanbanModule = createSlice({
         )
       };
     },
+    deleteCardList: (state, action): KanbanState => {
+      return {
+        kanban: state.kanban.filter(item => item.id !== action.payload.deleteId)
+      };
+    },
     reorderCard: (state, action): KanbanState => {
       return {
         kanban: state.kanban.map(item =>

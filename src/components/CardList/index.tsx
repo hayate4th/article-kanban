@@ -1,5 +1,5 @@
 import React from "react";
-import Card, { CardType } from "../Card";
+import Card, { CardType, DeleteButton } from "../Card";
 import {
   Draggable,
   DragDropContext,
@@ -19,11 +19,17 @@ export interface CardListType {
 
 interface CardListProps {
   cardList: CardListType;
+  deleteCardList: () => void;
   index: number;
   isEditMode: boolean;
 }
 
-const CardList: React.FC<CardListProps> = ({ cardList, index, isEditMode }) => {
+const CardList: React.FC<CardListProps> = ({
+  cardList,
+  deleteCardList,
+  index,
+  isEditMode
+}) => {
   const dispatch = useDispatch();
 
   const onDragEnd = (result: DropResult): void => {
@@ -72,15 +78,22 @@ const CardList: React.FC<CardListProps> = ({ cardList, index, isEditMode }) => {
                       // TODO: dispatch() の返す型を直書きしたくない
                       deleteCard={(): {
                         type: string;
-                        payload: { id: string; deleteId: string };
-                      } =>
-                        dispatch(
+                        payload: { id?: string; deleteId: string };
+                      } => {
+                        // Card が残り一つの時は CardList を削除
+                        if (cardList.cardList.length < 2)
+                          return dispatch(
+                            kanbanModule.actions.deleteCardList({
+                              deleteId: cardList.id
+                            })
+                          );
+                        return dispatch(
                           kanbanModule.actions.deleteCard({
                             id: cardList.id,
                             deleteId: card.id
                           })
-                        )
-                      }
+                        );
+                      }}
                     />
                   ))}
                   {cardProvided.placeholder}
@@ -88,6 +101,7 @@ const CardList: React.FC<CardListProps> = ({ cardList, index, isEditMode }) => {
               )}
             </Droppable>
           </DragDropContext>
+          {isEditMode && <DeleteButton onClick={deleteCardList} />}
         </StyledDiv>
       )}
     </Draggable>
@@ -100,6 +114,7 @@ const StyledDiv = styled.div`
   border-radius: 3px;
   margin-right: 20px;
   padding: 20px 20px 20px;
+  position: relative;
   width: 204px;
 `;
 

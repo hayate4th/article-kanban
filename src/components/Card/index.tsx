@@ -28,11 +28,11 @@ const Card: React.FC<CardProps> = ({ card, deleteCard, index, isEditMode }) => {
           {...provided.dragHandleProps}
           tabIndex={-1} // div と a の両方に対して focus が当たらないようにする
         >
-          {isEditMode && <DeleteButton onClick={deleteCard} />}
           <ArticleAnchor href={card.url} target="_blank">
             <ArticleTitle>{card.title}</ArticleTitle>
             <RegisteredDate>登録日: {card.registeredDate}</RegisteredDate>
           </ArticleAnchor>
+          {isEditMode && <DeleteButton onClick={deleteCard} />}
         </ArticleDiv>
       )}
     </Draggable>
@@ -88,15 +88,15 @@ const RegisteredDate = styled.span`
   right: 10px;
 `;
 
-const DeleteButton = styled.button`
+export const DeleteButton = styled.button`
   background-image: url(${deleteButton});
   border: none;
   border-radius: 10px;
   height: 20px;
   padding: 0;
   position: absolute;
-  right: 10px;
-  top: 10px;
+  right: 5px;
+  top: 5px;
   width: 20px;
   z-index: 999;
 `;
