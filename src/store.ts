@@ -4,14 +4,15 @@ import {
   getDefaultMiddleware,
   EnhancedStore
 } from "redux-starter-kit";
-import cardListModule from "./modules/cardListModule";
-import { CardListType } from "./components/CardList";
+import kanbanModule, { KanbanState } from "./modules/kanbanModule";
 
-const rootReducer = combineReducers({
-  kanban: cardListModule.reducer
-});
+const rootReducer = combineReducers({ kanbanState: kanbanModule.reducer });
 
-export const setupStore = (): EnhancedStore<{ kanban: CardListType[] }> => {
+export interface Store {
+  kanbanState: KanbanState;
+}
+
+export const setupStore = (): EnhancedStore<Store> => {
   const middlewares = [...getDefaultMiddleware()];
 
   const store = configureStore({

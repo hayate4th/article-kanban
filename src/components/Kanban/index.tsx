@@ -4,7 +4,8 @@ import styled from "styled-components";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import { reorder } from "../../utils";
-import cardListModule from "../../modules/cardListModule";
+import kanbanModule from "../../modules/kanbanModule";
+import { Store } from "../../store";
 
 interface KanbanProps {
   isEditMode: boolean;
@@ -12,9 +13,7 @@ interface KanbanProps {
 
 const Kanban: React.FC<KanbanProps> = ({ isEditMode }) => {
   const dispatch = useDispatch();
-  const state = useSelector(state => state) as {
-    kanban: CardListType[];
-  };
+  const state = useSelector((state: Store) => state.kanbanState);
 
   const onDragEnd = (result: DropResult): void => {
     if (!result.destination) {
@@ -30,40 +29,35 @@ const Kanban: React.FC<KanbanProps> = ({ isEditMode }) => {
       result.source.index,
       result.destination.index
     );
-    dispatch(cardListModule.actions.reorderCardList({ kanban }));
+    dispatch(kanbanModule.actions.reorderCardList({ kanban }));
   };
 
   return (
-    <StyledDiv>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="lists" direction="horizontal">
-          {(provided): React.ReactElement => (
-            <FlexDiv ref={provided.innerRef} {...provided.droppableProps}>
-              {state.kanban.map((cardList: CardListType, index: number) => (
-                <CardList
-                  cardList={cardList}
-                  index={index}
-                  key={cardList.id}
-                  isEditMode={isEditMode}
-                />
-              ))}
-              {provided.placeholder}
-            </FlexDiv>
-          )}
-        </Droppable>
-      </DragDropContext>
-    </StyledDiv>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="kanban" direction="horizontal">
+        {(provided): React.ReactElement => (
+          <FlexDiv ref={provided.innerRef} {...provided.droppableProps}>
+            {state.kanban.map((cardList: CardListType, index: number) => (
+              <CardList
+                cardList={cardList}
+                index={index}
+                key={cardList.id}
+                isEditMode={isEditMode}
+              />
+            ))}
+            {provided.placeholder}
+          </FlexDiv>
+        )}
+      </Droppable>
+    </DragDropContext>
   );
 };
 
-const StyledDiv = styled.div`
+const FlexDiv = styled.div`
   border: 5px solid black;
   border-radius: 3px;
-  padding: 20px 20px 20px;
-`;
-
-const FlexDiv = styled.div`
   display: flex;
+  padding: 20px 20px 20px;
 `;
 
 export default Kanban;

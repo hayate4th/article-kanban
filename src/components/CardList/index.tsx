@@ -9,12 +9,13 @@ import {
 import styled from "styled-components";
 import { reorder } from "../../utils";
 import { useDispatch } from "react-redux";
-import cardListModule from "../../modules/cardListModule";
+import kanbanModule from "../../modules/kanbanModule";
 
-export type CardListType = {
+// ViewModel 的なやつ
+export interface CardListType {
   id: string;
   cardList: CardType[];
-};
+}
 
 interface CardListProps {
   cardList: CardListType;
@@ -40,7 +41,7 @@ const CardList: React.FC<CardListProps> = ({ cardList, index, isEditMode }) => {
       result.destination.index
     );
     dispatch(
-      cardListModule.actions.reorderCard({
+      kanbanModule.actions.reorderCard({
         id: cardList.id,
         cardList: newCardList
       })
@@ -74,7 +75,7 @@ const CardList: React.FC<CardListProps> = ({ cardList, index, isEditMode }) => {
                         payload: { id: string; deleteId: string };
                       } =>
                         dispatch(
-                          cardListModule.actions.deleteCard({
+                          kanbanModule.actions.deleteCard({
                             id: cardList.id,
                             deleteId: card.id
                           })
@@ -94,6 +95,7 @@ const CardList: React.FC<CardListProps> = ({ cardList, index, isEditMode }) => {
 };
 
 const StyledDiv = styled.div`
+  background-color: white;
   border: 2px solid blue;
   border-radius: 3px;
   margin-right: 20px;
