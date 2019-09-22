@@ -78,15 +78,22 @@ const CardList: React.FC<CardListProps> = ({
                       // TODO: dispatch() の返す型を直書きしたくない
                       deleteCard={(): {
                         type: string;
-                        payload: { id: string; deleteId: string };
-                      } =>
-                        dispatch(
+                        payload: { id?: string; deleteId: string };
+                      } => {
+                        // Card が残り一つの時は CardList を削除
+                        if (cardList.cardList.length < 2)
+                          return dispatch(
+                            kanbanModule.actions.deleteCardList({
+                              deleteId: cardList.id
+                            })
+                          );
+                        return dispatch(
                           kanbanModule.actions.deleteCard({
                             id: cardList.id,
                             deleteId: card.id
                           })
-                        )
-                      }
+                        );
+                      }}
                     />
                   ))}
                   {cardProvided.placeholder}
