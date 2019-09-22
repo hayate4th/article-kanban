@@ -1,20 +1,30 @@
 import React from "react";
 import Card, { CardType } from "../Card";
-import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
+import {
+  Draggable,
+  DragDropContext,
+  Droppable,
+  DropResult
+} from "react-beautiful-dnd";
 import styled from "styled-components";
 import { reorder } from "../../utils";
-import { useDispatch, useSelector } from "react-redux";
-import cardListModule from "../../modules/cardListModule";
+import { useDispatch } from "react-redux";
+import kanbanModule from "../../modules/kanbanModule";
+
+// ViewModel 的なやつ
+export interface CardListType {
+  id: string;
+  cardList: CardType[];
+}
 
 interface CardListProps {
+  cardList: CardListType;
+  index: number;
   isEditMode: boolean;
 }
 
-const CardList: React.FC<CardListProps> = ({ isEditMode }) => {
+const CardList: React.FC<CardListProps> = ({ cardList, index, isEditMode }) => {
   const dispatch = useDispatch();
-  const state = useSelector(state => state) as {
-    cardList: CardType[];
-  };
 
   const onDragEnd = (result: DropResult): void => {
     if (!result.destination) {
@@ -25,44 +35,70 @@ const CardList: React.FC<CardListProps> = ({ isEditMode }) => {
       return;
     }
 
-    const cardList: CardType[] = reorder(
-      state.cardList,
+    const newCardList: CardType[] = reorder(
+      cardList.cardList,
       result.source.index,
       result.destination.index
     );
-    dispatch(cardListModule.actions.reorderCard({ cardList }));
+    dispatch(
+      kanbanModule.actions.reorderCard({
+        id: cardList.id,
+        cardList: newCardList
+      })
+    );
   };
 
   return (
-    <StyledDiv>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="list">
-          {(provided): React.ReactElement => (
-            <div ref={provided.innerRef} {...provided.droppableProps}>
-              {state.cardList.map((card: CardType, index: number) => (
-                <Card
-                  card={card}
-                  index={index}
-                  key={card.id}
-                  isEditMode={isEditMode}
-                  // TODO: dispatch() の返す型を直書きしたくない
-                  deleteCard={(): { type: string; payload: string } =>
-                    dispatch(cardListModule.actions.deleteCard(card.id))
-                  }
-                />
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-    </StyledDiv>
+    <Draggable draggableId={cardList.id} index={index}>
+      {(cardListProvided): React.ReactElement => (
+        <StyledDiv
+          ref={cardListProvided.innerRef}
+          {...cardListProvided.draggableProps}
+          {...cardListProvided.dragHandleProps}
+        >
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="list">
+              {(cardProvided): React.ReactElement => (
+                <div
+                  ref={cardProvided.innerRef}
+                  {...cardProvided.droppableProps}
+                >
+                  {cardList.cardList.map((card: CardType, index: number) => (
+                    <Card
+                      card={card}
+                      index={index}
+                      key={card.id}
+                      isEditMode={isEditMode}
+                      // TODO: dispatch() の返す型を直書きしたくない
+                      deleteCard={(): {
+                        type: string;
+                        payload: { id: string; deleteId: string };
+                      } =>
+                        dispatch(
+                          kanbanModule.actions.deleteCard({
+                            id: cardList.id,
+                            deleteId: card.id
+                          })
+                        )
+                      }
+                    />
+                  ))}
+                  {cardProvided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+        </StyledDiv>
+      )}
+    </Draggable>
   );
 };
 
 const StyledDiv = styled.div`
+  background-color: white;
   border: 2px solid blue;
   border-radius: 3px;
+  margin-right: 20px;
   padding: 20px 20px 20px;
   width: 204px;
 `;

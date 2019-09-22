@@ -1,10 +1,10 @@
 import React from "react";
-import CardList from "./components/CardList";
+import Kanban from "./components/Kanban";
 
 const App: React.FC<{}> = () => {
   return (
     <div>
-      <CardList isEditMode={true} />
+      <Kanban isEditMode={false} />
     </div>
   );
 };

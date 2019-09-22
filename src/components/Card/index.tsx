@@ -3,13 +3,13 @@ import styled from "styled-components";
 import { Draggable } from "react-beautiful-dnd";
 import deleteButton from "./delete_button.png";
 
-// TODO: type じゃなくてもいいかも？
-export type CardType = {
+// ViewModel 的なやつ
+export interface CardType {
   id: string;
   title: string;
   url: string;
   registeredDate: string;
-};
+}
 
 interface CardProps {
   card: CardType;
@@ -18,30 +18,29 @@ interface CardProps {
   isEditMode: boolean;
 }
 
-// TODO: styled-components のコンポーネント名をなんとかしたい
-// TODO: できれば Card と Draggable を分離したい
 const Card: React.FC<CardProps> = ({ card, deleteCard, index, isEditMode }) => {
   return (
     <Draggable draggableId={card.id} index={index}>
       {(provided): React.ReactElement => (
-        <StyledDiv
+        <ArticleDiv
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
+          tabIndex={-1} // div と a の両方に対して focus が当たらないようにする
         >
           {isEditMode && <DeleteButton onClick={deleteCard} />}
-          <StyledA href={card.url} target="_blank">
-            <StyledH1>{card.title}</StyledH1>
-            <StyledSpan>登録日: {card.registeredDate}</StyledSpan>
-          </StyledA>
-        </StyledDiv>
+          <ArticleAnchor href={card.url} target="_blank">
+            <ArticleTitle>{card.title}</ArticleTitle>
+            <RegisteredDate>登録日: {card.registeredDate}</RegisteredDate>
+          </ArticleAnchor>
+        </ArticleDiv>
       )}
     </Draggable>
   );
 };
 
 // TODO: 複数行以上になると text-overflow: ellipsis がかかるようにする
-const StyledH1 = styled.h1`
+const ArticleTitle = styled.h1`
   font-size: 25px;
   margin: 0;
   max-height: 150px;
@@ -51,7 +50,8 @@ const StyledH1 = styled.h1`
 `;
 
 // TODO: height と width が子要素に依存しまくっているのでしっかりしたい
-const StyledDiv = styled.div`
+// TODO: コンポーネント名をなんとかしたい
+const ArticleDiv = styled.div`
   font-size: 25px;
   height: 204px;
   margin-bottom: 10px;
@@ -60,7 +60,7 @@ const StyledDiv = styled.div`
   width: 204px;
 `;
 
-const StyledA = styled.a`
+const ArticleAnchor = styled.a`
   background-color: white;
   border: 2px solid orange;
   border-radius: 3px;
@@ -79,8 +79,8 @@ const StyledA = styled.a`
   }
 `;
 
-// TODO: span を block 要素にしたくない
-const StyledSpan = styled.span`
+// TODO: span を block 要素にしたくない (span 以外を使いたい)
+const RegisteredDate = styled.span`
   bottom: 10px;
   display: block;
   font-size: 50%;
