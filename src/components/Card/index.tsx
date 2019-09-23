@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { Draggable } from "react-beautiful-dnd";
-import deleteButton from "./delete_button.png";
+import DropDownMenu from "../DropDownMenu";
+import { MenuItem } from "@material-ui/core";
 
 // ViewModel 的なやつ
 export interface CardType {
@@ -15,12 +16,12 @@ interface CardProps {
   card: CardType;
   deleteCard: () => void;
   index: number;
-  isEditMode: boolean;
+  isMenuOpen: boolean;
 }
 
-const Card: React.FC<CardProps> = ({ card, deleteCard, index, isEditMode }) => {
+const Card: React.FC<CardProps> = ({ card, deleteCard, index, isMenuOpen }) => {
   return (
-    <Draggable draggableId={card.id} index={index}>
+    <Draggable draggableId={card.id} index={index} isDragDisabled={isMenuOpen}>
       {(provided): React.ReactElement => (
         <ArticleDiv
           ref={provided.innerRef}
@@ -32,7 +33,14 @@ const Card: React.FC<CardProps> = ({ card, deleteCard, index, isEditMode }) => {
             <ArticleTitle>{card.title}</ArticleTitle>
             <RegisteredDate>登録日: {card.registeredDate}</RegisteredDate>
           </ArticleAnchor>
-          {isEditMode && <DeleteButton onClick={deleteCard} />}
+          <DropDownMenu fontSize="small" size="small">
+            <MenuItem key="edit" onClick={(): void => {}}>
+              Edit Card
+            </MenuItem>
+            <MenuItem key="delete" onClick={deleteCard}>
+              Delete Card
+            </MenuItem>
+          </DropDownMenu>
         </ArticleDiv>
       )}
     </Draggable>
@@ -66,8 +74,8 @@ const ArticleAnchor = styled.a`
   border-radius: 3px;
   color: black;
   display: block;
-  height: 180px;
-  padding: 10px;
+  height: 170px;
+  padding: 20px 10px 10px;
   position: relative;
   text-decoration: none;
   width: 180px;
@@ -86,19 +94,6 @@ const RegisteredDate = styled.span`
   font-size: 50%;
   position: absolute;
   right: 10px;
-`;
-
-export const DeleteButton = styled.button`
-  background-image: url(${deleteButton});
-  border: none;
-  border-radius: 10px;
-  height: 20px;
-  padding: 0;
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  width: 20px;
-  z-index: 999;
 `;
 
 export default Card;

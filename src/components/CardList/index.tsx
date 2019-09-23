@@ -1,9 +1,11 @@
 import React from "react";
-import Card, { CardType, DeleteButton } from "../Card";
+import Card, { CardType } from "../Card";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import kanbanModule from "../../modules/kanbanModule";
+import DropDownMenu from "../DropDownMenu";
+import { MenuItem } from "@material-ui/core";
 
 // ViewModel 的なやつ
 export interface CardListType {
@@ -16,25 +18,40 @@ interface CardListProps {
   cardList: CardListType;
   deleteCardList: () => void;
   index: number;
-  isEditMode: boolean;
+  isMenuOpen: boolean;
 }
 
 const CardList: React.FC<CardListProps> = ({
   cardList,
   deleteCardList,
   index,
-  isEditMode
+  isMenuOpen
 }) => {
   const dispatch = useDispatch();
 
   return (
-    <Draggable draggableId={cardList.id} index={index}>
+    <Draggable
+      draggableId={cardList.id}
+      index={index}
+      isDragDisabled={isMenuOpen}
+    >
       {(cardListProvided): React.ReactElement => (
         <StyledDiv
           ref={cardListProvided.innerRef}
           {...cardListProvided.draggableProps}
           {...cardListProvided.dragHandleProps}
         >
+          <DropDownMenu fontSize="default" size="small">
+            <MenuItem key="add" onClick={(): void => {}}>
+              Add Card
+            </MenuItem>
+            <MenuItem key="edit" onClick={(): void => {}}>
+              Edit CardList
+            </MenuItem>
+            <MenuItem key="delete" onClick={deleteCardList}>
+              Delete CardList
+            </MenuItem>
+          </DropDownMenu>
           <CardListTitle>{cardList.title}</CardListTitle>
           <Droppable droppableId={cardList.id} type="CARD">
             {(cardProvided): React.ReactElement => (
@@ -47,7 +64,6 @@ const CardList: React.FC<CardListProps> = ({
                     card={card}
                     index={index}
                     key={card.id}
-                    isEditMode={isEditMode}
                     // TODO: dispatch() の返す型を直書きしたくない
                     deleteCard={(): {
                       type: string;
@@ -67,13 +83,13 @@ const CardList: React.FC<CardListProps> = ({
                         })
                       );
                     }}
+                    isMenuOpen={isMenuOpen}
                   />
                 ))}
                 {cardProvided.placeholder}
               </DropZone>
             )}
           </Droppable>
-          {isEditMode && <DeleteButton onClick={deleteCardList} />}
         </StyledDiv>
       )}
     </Draggable>
