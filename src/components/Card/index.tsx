@@ -95,8 +95,8 @@ export const DeleteButton = styled.button`
   height: 20px;
   padding: 0;
   position: absolute;
-  right: 5px;
-  top: 5px;
+  right: 10px;
+  top: 10px;
   width: 20px;
   z-index: 999;
 `;
