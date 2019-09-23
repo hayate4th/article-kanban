@@ -59,13 +59,13 @@ const Kanban: React.FC<KanbanProps> = ({ isEditMode }) => {
                 deleteCardList={(): {
                   type: string;
                   payload: { deleteId: string };
-                } => {
-                  return dispatch(
+                } =>
+                  dispatch(
                     kanbanModule.actions.deleteCardList({
                       deleteId: cardList.id
                     })
-                  );
-                }}
+                  )
+                }
                 index={index}
                 key={cardList.id}
                 isEditMode={isEditMode}
