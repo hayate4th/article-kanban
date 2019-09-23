@@ -2,12 +2,14 @@ import { createSlice } from "redux-starter-kit";
 import { CardListType } from "../components/CardList";
 
 export interface KanbanState {
+  isMenuOpen: boolean;
   kanban: CardListType[];
 }
 
 const kanbanModule = createSlice({
   slice: "kanban",
   initialState: {
+    isMenuOpen: false,
     kanban: [
       {
         id: "cardList-1",
@@ -86,6 +88,7 @@ const kanbanModule = createSlice({
   reducers: {
     deleteCard: (state, action): KanbanState => {
       return {
+        isMenuOpen: state.isMenuOpen,
         kanban: state.kanban.map(item =>
           item.id !== action.payload.id
             ? item
@@ -101,18 +104,29 @@ const kanbanModule = createSlice({
     },
     deleteCardList: (state, action): KanbanState => {
       return {
+        isMenuOpen: state.isMenuOpen,
         kanban: state.kanban.filter(item => item.id !== action.payload.deleteId)
+      };
+    },
+    handleIsMenuOpen: (state, action): KanbanState => {
+      return {
+        isMenuOpen: action.payload,
+        kanban: state.kanban
       };
     },
     reorderCard: (state, action): KanbanState => {
       return {
+        isMenuOpen: state.isMenuOpen,
         kanban: state.kanban.map(item =>
           item.id !== action.payload.id ? item : action.payload
         )
       };
     },
     reorderCardList: (state, action): KanbanState => {
-      return { kanban: action.payload.kanban };
+      return {
+        isMenuOpen: state.isMenuOpen,
+        kanban: action.payload.kanban
+      };
     }
   }
 });
