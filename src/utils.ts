@@ -20,7 +20,7 @@ export const reorderKanbanState = (
   kanbanState: KanbanState,
   source: DraggableLocation,
   destination: DraggableLocation
-): KanbanState => {
+): CardListType[] => {
   // TODO: なんとかして array から object にする方法を探したい (データ構造を変える等)
   const current: CardListType = kanbanState.kanban.filter(
     item => item.id === source.droppableId
@@ -38,17 +38,15 @@ export const reorderKanbanState = (
       destination.index
     );
 
-    return {
-      kanban: kanbanState.kanban.map(item =>
-        item.id !== current.id
-          ? item
-          : {
-              id: current.id,
-              title: current.title,
-              cardList: cardList
-            }
-      )
-    };
+    return kanbanState.kanban.map(item =>
+      item.id !== current.id
+        ? item
+        : {
+            id: current.id,
+            title: current.title,
+            cardList: cardList
+          }
+    );
   }
 
   // 違う CardList に移動する場合
@@ -62,16 +60,14 @@ export const reorderKanbanState = (
     ...next.cardList.slice(destination.index)
   ];
 
-  return {
-    kanban: kanbanState.kanban.map(item =>
-      item.id !== current.id && item.id !== next.id
-        ? item
-        : {
-            id: item.id,
-            title: item.title,
-            cardList:
-              item.id === current.id ? newCurrentCardList : newNextCardList
-          }
-    )
-  };
+  return kanbanState.kanban.map(item =>
+    item.id !== current.id && item.id !== next.id
+      ? item
+      : {
+          id: item.id,
+          title: item.title,
+          cardList:
+            item.id === current.id ? newCurrentCardList : newNextCardList
+        }
+  );
 };
