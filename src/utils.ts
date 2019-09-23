@@ -4,7 +4,7 @@ import { KanbanState } from "./modules/kanbanModule";
 import { CardListType } from "./components/CardList";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export const reorder = (
+export const reorderArray = (
   list: Iterable<any> | ArrayLike<any>,
   startIndex: number,
   endIndex: number
@@ -16,11 +16,11 @@ export const reorder = (
   return result;
 };
 
-export const reorderCard = (
+export const reorderKanbanState = (
   kanbanState: KanbanState,
   source: DraggableLocation,
   destination: DraggableLocation
-): any => {
+): KanbanState => {
   // TODO: なんとかして array から object にする方法を探したい (データ構造を変える等)
   const current: CardListType = kanbanState.kanban.filter(
     item => item.id === source.droppableId
@@ -32,21 +32,23 @@ export const reorderCard = (
 
   // 同じ CardList 内で移動する場合
   if (source.droppableId === destination.droppableId) {
-    const cardList: CardType[] = reorder(
+    const cardList: CardType[] = reorderArray(
       current.cardList,
       source.index,
       destination.index
     );
 
-    return kanbanState.kanban.map(item =>
-      item.id !== current.id
-        ? item
-        : {
-            id: current.id,
-            title: current.title,
-            cardList: cardList
-          }
-    );
+    return {
+      kanban: kanbanState.kanban.map(item =>
+        item.id !== current.id
+          ? item
+          : {
+              id: current.id,
+              title: current.title,
+              cardList: cardList
+            }
+      )
+    };
   }
 
   // 違う CardList に移動する場合
@@ -60,14 +62,16 @@ export const reorderCard = (
     ...next.cardList.slice(destination.index)
   ];
 
-  return kanbanState.kanban.map(item =>
-    item.id !== current.id && item.id !== next.id
-      ? item
-      : {
-          id: item.id,
-          title: item.title,
-          cardList:
-            item.id === current.id ? newCurrentCardList : newNextCardList
-        }
-  );
+  return {
+    kanban: kanbanState.kanban.map(item =>
+      item.id !== current.id && item.id !== next.id
+        ? item
+        : {
+            id: item.id,
+            title: item.title,
+            cardList:
+              item.id === current.id ? newCurrentCardList : newNextCardList
+          }
+    )
+  };
 };

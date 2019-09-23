@@ -3,8 +3,8 @@ import CardList, { CardListType } from "../CardList";
 import styled from "styled-components";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
-import { reorder, reorderCard } from "../../utils";
-import kanbanModule from "../../modules/kanbanModule";
+import { reorderArray, reorderKanbanState } from "../../utils";
+import kanbanModule, { KanbanState } from "../../modules/kanbanModule";
 import { Store } from "../../store";
 
 interface KanbanProps {
@@ -28,7 +28,7 @@ const Kanban: React.FC<KanbanProps> = ({ isEditMode }) => {
     }
 
     if (result.type === "CARD_LIST") {
-      const kanban: CardListType[] = reorder(
+      const kanban: CardListType[] = reorderArray(
         state.kanban,
         result.source.index,
         result.destination.index
@@ -39,13 +39,13 @@ const Kanban: React.FC<KanbanProps> = ({ isEditMode }) => {
       return;
     }
 
-    const kanban: CardListType[] = reorderCard(
+    const kanban: KanbanState = reorderKanbanState(
       state,
       result.source,
       result.destination
     );
 
-    dispatch(kanbanModule.actions.reorderCardList({ kanban }));
+    dispatch(kanbanModule.actions.reorderCardList(kanban));
   };
 
   return (
