@@ -4,14 +4,10 @@ import styled from "styled-components";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import { reorderArray, reorderKanbanState } from "../../utils";
-import kanbanModule, { KanbanState } from "../../modules/kanbanModule";
+import kanbanModule from "../../modules/kanbanModule";
 import { Store } from "../../store";
 
-interface KanbanProps {
-  isEditMode: boolean;
-}
-
-const Kanban: React.FC<KanbanProps> = ({ isEditMode }) => {
+const Kanban: React.FC<{}> = () => {
   const dispatch = useDispatch();
   const state = useSelector((state: Store) => state.kanbanState);
 
@@ -39,13 +35,13 @@ const Kanban: React.FC<KanbanProps> = ({ isEditMode }) => {
       return;
     }
 
-    const kanban: KanbanState = reorderKanbanState(
+    const kanban: CardListType[] = reorderKanbanState(
       state,
       result.source,
       result.destination
     );
 
-    dispatch(kanbanModule.actions.reorderCardList(kanban));
+    dispatch(kanbanModule.actions.reorderCardList({ kanban }));
   };
 
   return (
@@ -56,19 +52,16 @@ const Kanban: React.FC<KanbanProps> = ({ isEditMode }) => {
             {state.kanban.map((cardList: CardListType, index: number) => (
               <CardList
                 cardList={cardList}
-                deleteCardList={(): {
-                  type: string;
-                  payload: { deleteId: string };
-                } =>
+                deleteCardList={(): void => {
                   dispatch(
                     kanbanModule.actions.deleteCardList({
                       deleteId: cardList.id
                     })
-                  )
-                }
+                  );
+                }}
                 index={index}
                 key={cardList.id}
-                isEditMode={isEditMode}
+                isMenuOpen={state.isMenuOpen}
               />
             ))}
             {provided.placeholder}

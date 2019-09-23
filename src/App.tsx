@@ -4,7 +4,7 @@ import Kanban from "./components/Kanban";
 const App: React.FC<{}> = () => {
   return (
     <div>
-      <Kanban isEditMode={false} />
+      <Kanban />
     </div>
   );
 };
