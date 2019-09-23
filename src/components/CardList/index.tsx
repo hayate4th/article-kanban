@@ -1,19 +1,14 @@
 import React from "react";
 import Card, { CardType, DeleteButton } from "../Card";
-import {
-  Draggable,
-  DragDropContext,
-  Droppable,
-  DropResult
-} from "react-beautiful-dnd";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
-import { reorder } from "../../utils";
 import { useDispatch } from "react-redux";
 import kanbanModule from "../../modules/kanbanModule";
 
 // ViewModel 的なやつ
 export interface CardListType {
   id: string;
+  title: string;
   cardList: CardType[];
 }
 
@@ -32,28 +27,6 @@ const CardList: React.FC<CardListProps> = ({
 }) => {
   const dispatch = useDispatch();
 
-  const onDragEnd = (result: DropResult): void => {
-    if (!result.destination) {
-      return;
-    }
-
-    if (result.destination.index === result.source.index) {
-      return;
-    }
-
-    const newCardList: CardType[] = reorder(
-      cardList.cardList,
-      result.source.index,
-      result.destination.index
-    );
-    dispatch(
-      kanbanModule.actions.reorderCard({
-        id: cardList.id,
-        cardList: newCardList
-      })
-    );
-  };
-
   return (
     <Draggable draggableId={cardList.id} index={index}>
       {(cardListProvided): React.ReactElement => (
@@ -62,51 +35,64 @@ const CardList: React.FC<CardListProps> = ({
           {...cardListProvided.draggableProps}
           {...cardListProvided.dragHandleProps}
         >
-          <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId="list">
-              {(cardProvided): React.ReactElement => (
-                <div
-                  ref={cardProvided.innerRef}
-                  {...cardProvided.droppableProps}
-                >
-                  {cardList.cardList.map((card: CardType, index: number) => (
-                    <Card
-                      card={card}
-                      index={index}
-                      key={card.id}
-                      isEditMode={isEditMode}
-                      // TODO: dispatch() の返す型を直書きしたくない
-                      deleteCard={(): {
-                        type: string;
-                        payload: { id?: string; deleteId: string };
-                      } => {
-                        // Card が残り一つの時は CardList を削除
-                        if (cardList.cardList.length < 2)
-                          return dispatch(
-                            kanbanModule.actions.deleteCardList({
-                              deleteId: cardList.id
-                            })
-                          );
+          <CardListTitle>{cardList.title}</CardListTitle>
+          <Droppable droppableId={cardList.id} type="CARD">
+            {(cardProvided): React.ReactElement => (
+              <DropZone
+                ref={cardProvided.innerRef}
+                {...cardProvided.droppableProps}
+              >
+                {cardList.cardList.map((card: CardType, index: number) => (
+                  <Card
+                    card={card}
+                    index={index}
+                    key={card.id}
+                    isEditMode={isEditMode}
+                    // TODO: dispatch() の返す型を直書きしたくない
+                    deleteCard={(): {
+                      type: string;
+                      payload: { id?: string; deleteId: string };
+                    } => {
+                      // Card が残り一つの時は CardList を削除
+                      if (cardList.cardList.length < 2)
                         return dispatch(
-                          kanbanModule.actions.deleteCard({
-                            id: cardList.id,
-                            deleteId: card.id
+                          kanbanModule.actions.deleteCardList({
+                            deleteId: cardList.id
                           })
                         );
-                      }}
-                    />
-                  ))}
-                  {cardProvided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </DragDropContext>
+                      return dispatch(
+                        kanbanModule.actions.deleteCard({
+                          id: cardList.id,
+                          deleteId: card.id
+                        })
+                      );
+                    }}
+                  />
+                ))}
+                {cardProvided.placeholder}
+              </DropZone>
+            )}
+          </Droppable>
           {isEditMode && <DeleteButton onClick={deleteCardList} />}
         </StyledDiv>
       )}
     </Draggable>
   );
 };
+
+const CardListTitle = styled.h1`
+  font-size: 25px;
+  margin: 0;
+  max-height: 150px;
+  overflow: hidden;
+  text-align: center;
+  word-break: break-all;
+`;
+
+const DropZone = styled.div`
+  height: 650px;
+  overflow: scroll;
+`;
 
 const StyledDiv = styled.div`
   background-color: white;

@@ -3,8 +3,8 @@ import CardList, { CardListType } from "../CardList";
 import styled from "styled-components";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
-import { reorder } from "../../utils";
-import kanbanModule from "../../modules/kanbanModule";
+import { reorderArray, reorderKanbanState } from "../../utils";
+import kanbanModule, { KanbanState } from "../../modules/kanbanModule";
 import { Store } from "../../store";
 
 interface KanbanProps {
@@ -20,21 +20,37 @@ const Kanban: React.FC<KanbanProps> = ({ isEditMode }) => {
       return;
     }
 
-    if (result.destination.index === result.source.index) {
+    if (
+      result.destination.droppableId === result.source.droppableId &&
+      result.destination.index === result.source.index
+    ) {
       return;
     }
 
-    const kanban: CardListType[] = reorder(
-      state.kanban,
-      result.source.index,
-      result.destination.index
+    if (result.type === "CARD_LIST") {
+      const kanban: CardListType[] = reorderArray(
+        state.kanban,
+        result.source.index,
+        result.destination.index
+      );
+
+      dispatch(kanbanModule.actions.reorderCardList({ kanban }));
+
+      return;
+    }
+
+    const kanban: KanbanState = reorderKanbanState(
+      state,
+      result.source,
+      result.destination
     );
-    dispatch(kanbanModule.actions.reorderCardList({ kanban }));
+
+    dispatch(kanbanModule.actions.reorderCardList(kanban));
   };
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="kanban" direction="horizontal">
+      <Droppable droppableId="kanban" type="CARD_LIST" direction="horizontal">
         {(provided): React.ReactElement => (
           <FlexDiv ref={provided.innerRef} {...provided.droppableProps}>
             {state.kanban.map((cardList: CardListType, index: number) => (

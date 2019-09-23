@@ -11,6 +11,7 @@ const kanbanModule = createSlice({
     kanban: [
       {
         id: "cardList-1",
+        title: "TODO",
         cardList: [
           {
             id: "card-1",
@@ -34,21 +35,22 @@ const kanbanModule = createSlice({
       },
       {
         id: "cardList-2",
+        title: "DOING",
         cardList: [
           {
-            id: "card-1",
+            id: "card-4",
             title: "Hoge",
             url: "https://reactjs.org/docs/hooks-intro.html",
             registeredDate: "2019/09/06"
           },
           {
-            id: "card-2",
+            id: "card-5",
             title: "Fuga",
             url: "https://reactjs.org/docs/hooks-overview.html",
             registeredDate: "2019/09/07"
           },
           {
-            id: "card-3",
+            id: "card-6",
             title: "Piyo",
             url: "https://reactjs.org/docs/hooks-state.html",
             registeredDate: "2019/09/07"
@@ -57,21 +59,22 @@ const kanbanModule = createSlice({
       },
       {
         id: "cardList-3",
+        title: "DONE",
         cardList: [
           {
-            id: "card-1",
+            id: "card-7",
             title: "むんっ",
             url: "https://reactjs.org/docs/hooks-intro.html",
             registeredDate: "2019/09/06"
           },
           {
-            id: "card-2",
+            id: "card-8",
             title: "ほわっ",
             url: "https://reactjs.org/docs/hooks-overview.html",
             registeredDate: "2019/09/07"
           },
           {
-            id: "card-3",
+            id: "card-9",
             title: "ぴよ",
             url: "https://reactjs.org/docs/hooks-state.html",
             registeredDate: "2019/09/07"
@@ -88,6 +91,7 @@ const kanbanModule = createSlice({
             ? item
             : {
                 id: item.id,
+                title: item.title,
                 cardList: item.cardList.filter(
                   itemItem => itemItem.id !== action.payload.deleteId
                 )
