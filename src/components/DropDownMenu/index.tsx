@@ -17,6 +17,7 @@ const DropDownMenu: React.FC<DropDownMenuProps> = ({
   size
 }) => {
   const dispatch = useDispatch();
+  // TODO: ここの型これでいいの？
   const [anchorEl, setAnchorEl] = useState<
     EventTarget & HTMLButtonElement | null
   >(null);
@@ -32,6 +33,7 @@ const DropDownMenu: React.FC<DropDownMenuProps> = ({
     setAnchorEl(null);
   };
 
+  // TODO: aria-hoge きちんと対応する
   return (
     <StyledDiv>
       <IconButton
